@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<script type="text/javascript" src="GameOthelloServer.js"></script>
+<link rel="stylesheet" href="GameOthello.css" />
+<script type="text/javascript">
+//<!--
+var debug = false;
+//var debug = true;
+var goths= new GameOthelloServer;
+window.onload = function(){
+	goths.init();
+	gameOthelloControl.init(goths);
+	goths.startGame();
+}
+var gameOthelloControl = {
+	 "goths":null
+	,"init":function(goths){
+		this.goths = goths;
+		this.goths.onmsg = this.onmsg.bind(this);
+		this.goths.onmymsg = this.onmymsg.bind(this);
+		this.goths.onerror = this.onerror.bind(this);
+		this.goths.onstart = this.onstart.bind(this);
+		this.goths.onend = this.onend.bind(this);
+		this.goths.onsyncInfo = this.onsyncInfo.bind(this);
+		
+		document.getElementById('othelloBoard').onclick = function(event){
+			var td = event.target;
+			if(td.tagName=='DIV'){
+				td = td.parentNode;
+			}
+			if(td.tagName!='TD'){
+				return false;
+			}
+			this.goths.stone(td.seq);
+		}.bind(this);
+		
+		var tds = document.getElementById('othelloBoard').getElementsByTagName('td');
+		for(var i=0,m=tds.length;i<m;i++){
+			tds[i].seq = i;
+			
+		}
+	}
+	,"onmsg":function(msg){
+		alert(msg);
+	}
+	,"onmymsg":function(msg){
+		alert(msg);
+	}
+	,"onerror":function(msg){
+		alert(msg);
+	}
+	,"onstart":function(info){
+		console.log("onstart:"+info);
+		this.syncInfo(info);
+	}
+	,"onend":function(info){
+		console.log("onend:"+info);
+		console.log(info);
+		this.syncInfo(info);
+	}
+	,"onsyncInfo":function(info){
+		console.log("onsyncInfo:");
+		console.log(info);
+		this.syncInfo(info);
+	}
+	,"syncInfo":function(info){
+		var t = document.getElementById('divTurn');
+		switch(info.turn){
+			case 1:
+				t.innerHTML = "흑";
+				t.className = "labelBlack";
+				break;
+			case 2:
+				t.innerHTML = "백";
+				t.className = "labelWhite";
+				break;
+		}
+		var tds = document.getElementById('othelloBoard').getElementsByTagName('td');
+		for(var i=0,m=info.boxs.length;i<m;i++){
+			switch(info.boxs[i]){
+				case 0: tds[i].className = "";break;
+				case 1: tds[i].className = "b";break;
+				case 2: tds[i].className = "w";break;
+			}
+		}
+		for(var i=0,m=info.ableBoxs.length;i<m;i++){ //놓을 수 있는 위치 표시
+			tds[info.ableBoxs[i]].className ="c";
+		}
+		var tds = document.getElementById('divBScore').innerHTML = info.score[1];
+		var tds = document.getElementById('divWScore').innerHTML = info.score[2];
+		
+	}
+}
+// -->
+</script>
+<title>Othello,Reversi (오셀로,리버시)</title>
+</head>
+
+<body>
+<h2 style="text-align:center">Othello,Reversi,오델로[<a href="./game_othello.html" target="_blank">NEW</a>]</h2>
+
+<table id="scoreBoard" border="0" cellpadding="0" cellspacing="0" >
+  <tr>
+    <th width="100" rowspan="2" align="center"><div id="divTurn">-</div></th>
+    <th width="80" align="center" class="labelBlack">흑</th>
+    <th width="80" align="center" class="labelWhite">백</th>
+  </tr>
+  <tr>
+    <td align="center" style="font-weight:bold" class="labelBlack"><div id="divBScore">-</div></td>
+    <td align="center" style="font-weight:bold"><div id="divWScore">-</div></td>
+  </tr>
+  <tr>
+  	<th colspan="3" align="center"><input type="button" class="btn" value="재시작" onclick="goth.startGame();" id="btnStart" />
+ 		<input type="button" class="btn" value="AI 훈수" onclick="gothAI.act(goth.turn,0);" />
+		<input type="button" class="btn" value="AI 예측" onclick="gothAI.preAct(goth.turn,0);" />
+		
+		<input type="button" class="btn" value="TEST" onclick="startTestAi(64);" />
+		<input type="button" class="btn" value="back" onclick="goth.backHistory(2)" />
+<!--
+		<input type="button" class="btn" value="TEST2" onclick="testAi2(64);" /> 
+		<input type="button" class="btn" value="back1" onclick="goth.backHistory(1)" />
+-->
+	</th>
+ 	</tr>
+  <tr>
+</table>
+
+
+
+<table border="0" cellpadding="0" cellspacing="0" id="othelloBoard" >
+    <tr>
+        <td><div></div></td><td><div></div></td><td><div></div></td>
+        <td><div></div></td><td><div></div></td><td><div></div></td>
+        <td><div></div></td><td><div></div></td>
+  </tr>
+    <tr>
+        <td><div></div></td><td><div></div></td><td><div></div></td>
+        <td><div></div></td><td><div></div></td><td><div></div></td>
+        <td><div></div></td><td><div></div></td>
+    </tr>
+    <tr>
+        <td><div></div></td><td><div></div></td><td><div></div></td>
+        <td><div></div></td><td><div></div></td><td><div></div></td>
+        <td><div></div></td><td><div></div></td>
+    </tr>
+    <tr>
+        <td><div></div></td><td><div></div></td><td><div></div></td>
+        <td class="w"><div></div></td><td class="b"><div></div></td><td><div></div></td>
+        <td><div></div></td><td><div></div></td>
+    </tr>
+    <tr>
+        <td><div></div></td><td><div></div></td><td><div></div></td>
+        <td class="b"><div></div></td><td class="w"><div></div></td><td><div></div></td>
+        <td><div></div></td><td><div></div></td>
+    </tr>
+    <tr>
+        <td><div></div></td><td><div></div></td><td><div></div></td>
+        <td><div></div></td><td><div></div></td><td><div></div></td>
+        <td><div></div></td><td><div></div></td>
+    </tr>
+    <tr>
+        <td><div></div></td><td><div></div></td><td><div></div></td>
+        <td><div></div></td><td><div></div></td><td><div></div></td>
+        <td><div></div></td><td><div></div></td>
+    </tr>
+    <tr>
+        <td><div></div></td><td><div></div></td><td><div></div></td>
+        <td><div></div></td><td><div></div></td><td><div></div></td>
+        <td><div></div></td><td><div></div></td>
+    </tr>
+</table>
+
+
+</body>
+</html>

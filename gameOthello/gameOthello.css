@@ -1,0 +1,69 @@
+@charset "utf-8";
+/* CSS Document */
+
+table#othelloBoard{ background-color:#0C6; border-collapse:collapse; margin:0 auto;
+  -moz-box-shadow:    1px 1px 0px 0px #000;
+  -webkit-box-shadow: 1px 1px 0px 0px #000;
+  box-shadow:         1px 1px 0px 0px #000;
+filter: progid:DXImageTransform.Microsoft.Shadow(color=black,direction=135,strength=1);
+}
+table#othelloBoard td{width:36px; height:36px; border:1px solid black;
+text-align:center;
+color:#666;
+cursor:pointer;
+}
+table#othelloBoard td div{
+	margin:auto;
+	height:95%; width:95%;
+	border-radius: 50%;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+}
+table#othelloBoard td.b div{background-color:black;
+  -moz-box-shadow:    1px 1px 0px 0px #fff;
+  -webkit-box-shadow: 1px 1px 0px 0px #fff;
+  box-shadow:         1px 1px 0px 0px #fff;
+filter: progid:DXImageTransform.Microsoft.Shadow(color=white,direction=135,strength=1);
+cursor:no-drop;
+}
+table#othelloBoard td.w div{background-color:white;
+  -moz-box-shadow:    1px 1px 0px 0px #000;
+  -webkit-box-shadow: 1px 1px 0px 0px #000;
+  box-shadow:         1px 1px 0px 0px #000;
+filter: progid:DXImageTransform.Microsoft.Shadow(color=black,direction=135,strength=1);
+cursor:no-drop;
+}
+table#othelloBoard td.c{
+	background-color:#3F0;
+}
+table#othelloBoard.w td.c:hover div{
+	background-color:white;
+	opacity:0.8
+}
+table#othelloBoard.b td.c:hover div{
+	background-color:black;
+	opacity:0.5
+}
+/*방금놓은돌*/
+table#othelloBoard td.n{
+	background-color:#FC6;
+}
+
+
+
+.labelBlack{ background-color:#000; color:#CCC;}
+.labelWhtie{ background-color:#fff; color:#333;}
+
+#scoreBoard{ border-collapse:collapse; margin:0 auto; margin-bottom:5px;}
+#scoreBoard td,#scoreBoard th{border:1px solid gray;  padding:1px;}
+
+#divTurn{
+	text-align:center;
+	 width:20px; height:20px; margin:0 auto; line-height:20px; font-size:14px;
+border:1px solid gray;
+	border-radius: 50%;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+}
+
+.btn{border:1px solid black; border-color:#CCC #333 #333 #CCC;}

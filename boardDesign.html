@@ -1,0 +1,181 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Chat example</title>
+<script src="client/client.js"></script>
+<link rel="stylesheet" type="text/css" href="./gameOthello/gameOthello.css" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<style>
+	html, body{margin:0; padding:0;}
+	#layout{min-width:300px; max-width:1000px; margin:0 auto;}
+	#layout::after{content:"";clear:both;float:none; display:block}
+	.headerSection{ font-size:14px; text-align:center; margin:0px 3px; padding:3px; margin-bottom:3px;
+	font-weight:bold; border:3px double #abc; border-top-width:0px;}
+	#leftSection{float:none;}
+	#rightSection{float:none;}	
+	
+	
+	#msgsDiv{height:10em;overflow-y:scroll; font-size:12px;}
+	
+	
+</style>
+<style>
+/**
+* 미디어 쿼리로 제한 (대형화)
+*/
+
+@media all and (min-width:900px) {
+	#layout{position:relative;}
+	#leftSection{position:absolute;padding-right:300px;top:0;right:0;}
+	#rightSection{position:absolute;right:0;top:0; width:300px;}
+
+	table#othelloBoard td {
+		width: 72px;
+		height: 72px;
+		border: 1px solid black;
+		text-align: center;
+		color: #666;
+		cursor: pointer;
+	}
+	table#othelloBoard td div {
+	}
+	#msgsDiv{height:20em;}
+}
+/**
+* 미디어 쿼리로 제한 (소형화)
+*/
+@media all and (max-width:899px) {
+	#msgsDiv{position:fixed;height:4em; background-color:rgba(250,250,250,0.6);top:0;left:0;right:0;}
+}
+
+</style>
+<style>
+.show-robby{ display:none;}
+.show-game{ display:none;}
+#layout[data-room-type="robby"] .show-robby{ display:block;}
+#layout[data-room-type="game"] .show-game{ display:block;}
+
+.headerSection input{margin-right:-4em; width:5em;margin-left:1em;}
+#roomList li input{margin-left:2em;}
+</style>
+
+
+
+
+</head>
+
+<body>
+<div id="layout" data-room-type="game">
+	<section id="leftSection">
+		
+		<div class="show-robby">
+			<section class="headerSection"><span>로비</span> <input type="button" onclick="room.reqList()" value="갱신"></section>
+			<form onsubmit="room.create(this.subject.value);this.subject.value='';return false;">
+				<input type="text" name="subject" value="" placeholder="방이름" maxlength="100"><input type="submit" value="방만들기">
+			</form>
+			<ul id="roomList">
+				<li>방이름</li>
+			</ul>
+		</div>
+		<div class="show-game">
+			<section id="headerSection" class="headerSection"><span>방제목</span><input type="button" onclick="room.reqOut()" value="나가기"></section>
+			<!-- 게임판, 룸목록 등 -->
+			<table id="scoreBoard" border="0" cellpadding="0" cellspacing="0" >
+			  <tr>
+				<th width="100" rowspan="2" align="center"><div id="divTurn">-</div></th>
+				<th width="80" align="center" class="labelBlack">흑</th>
+				<th width="80" align="center" class="labelWhite">백</th>
+			  </tr>
+			  <tr>
+				<td align="center" style="font-weight:bold" class="labelBlack"><div id="divBScore">-</div></td>
+				<td align="center" style="font-weight:bold"><div id="divWScore">-</div></td>
+			  </tr>
+			  <tr>
+				<th colspan="3" align="center">
+				<input type="button" class="btn" value="재시작" onclick="gameOthelloClientControl.restart();"   />
+				<input type="button" class="btn" value="흑으로 참여" onclick="gameOthelloClientControl.joinB();" id="btnJoinB" />
+				<input type="button" class="btn" value="백으로 참여" onclick="gameOthelloClientControl.joinW();" id="btnJoinW" />
+				<input type="button" class="btn" value="참여 포기" onclick="gameOthelloClientControl.out();" id="btnOut" />
+				</th>
+				</tr>
+			  <tr>
+			</table>
+
+
+
+			<table border="0" cellpadding="0" cellspacing="0" id="othelloBoard" >
+				<tr>
+					<td><div></div></td><td><div></div></td><td><div></div></td>
+					<td><div></div></td><td><div></div></td><td><div></div></td>
+					<td><div></div></td><td><div></div></td>
+			  </tr>
+				<tr>
+					<td><div></div></td><td><div></div></td><td><div></div></td>
+					<td><div></div></td><td><div></div></td><td><div></div></td>
+					<td><div></div></td><td><div></div></td>
+				</tr>
+				<tr>
+					<td><div></div></td><td><div></div></td><td><div></div></td>
+					<td><div></div></td><td><div></div></td><td><div></div></td>
+					<td><div></div></td><td><div></div></td>
+				</tr>
+				<tr>
+					<td><div></div></td><td><div></div></td><td><div></div></td>
+					<td class="w"><div></div></td><td class="b"><div></div></td><td><div></div></td>
+					<td><div></div></td><td><div></div></td>
+				</tr>
+				<tr>
+					<td><div></div></td><td><div></div></td><td><div></div></td>
+					<td class="b"><div></div></td><td class="w"><div></div></td><td><div></div></td>
+					<td><div></div></td><td><div></div></td>
+				</tr>
+				<tr>
+					<td><div></div></td><td><div></div></td><td><div></div></td>
+					<td><div></div></td><td><div></div></td><td><div></div></td>
+					<td><div></div></td><td><div></div></td>
+				</tr>
+				<tr>
+					<td><div></div></td><td><div></div></td><td><div></div></td>
+					<td><div></div></td><td><div></div></td><td><div></div></td>
+					<td><div></div></td><td><div></div></td>
+				</tr>
+				<tr>
+					<td><div></div></td><td><div></div></td><td><div></div></td>
+					<td><div></div></td><td><div></div></td><td><div></div></td>
+					<td><div></div></td><td><div></div></td>
+				</tr>
+			</table>
+		</div>
+		
+	</section>
+	<section id="rightSection">
+		<!-- 메세지 박스 -->
+		<hr>
+		<div id="msgsDiv" ></div>
+		<form id="msgform" name="msgform">
+			<table style="table-layout:fixed; width:100%; text-align:center;" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td width="60px"><select name="cmd" style="width:95%; margin:0 auto; display:block">
+						<option value="msg">메세지</option>
+						<option value="nick">닉네임변경</option>
+					</select></td>
+					<td>
+					<input size="50" name="val" maxlength="200" style="width:95%; margin:0 auto; display:block"> 
+					</td>
+					<td  width="60px"><input type="submit" value="전송" style="width:95%; margin:0 auto; display:block"></td>
+				</tr>
+			</table>
+		</form>
+		<hr>
+		<select id="usersSelect" multiple="10">
+			<option value="">닉네임</option>
+		</select> 
+	</section>
+
+
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+/**
+* 클라이언트 채탱 부분용 CSS
+*/
+
+
+/* 메세지 부분 */
+#msgsDiv{word-break:break-all;}
+#msgsDiv div{margin:1px 0px; padding:1px;}
+
+#msgsDiv .msg{}
+#msgsDiv .notice{background-color:#fc3;color:#00c;}
+#msgsDiv .error{background-color:red;color:#fff;}
+#msgsDiv .private{}
+#msgsDiv .private::before{content:"(속삭임)"}
+
+/* 사용자 목록 */
+#usersSelect{width:90%; height:5em; display:block;margin:0 auto;}
+#usersSelect .mine{}
+#usersSelect .mine::before{content:"[MY] "; font-size:0.8em;}
